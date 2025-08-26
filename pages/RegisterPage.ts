@@ -1,0 +1,30 @@
+import { Page, Locator, expect } from "@playwright/test";
+import { BasePage } from "./BasePage";
+import { User } from "../interfaces/User";
+
+export class RegisterPage extends BasePage {
+  private emailTextbox: Locator;
+  private confirmPasswordTextbox: Locator;
+  private pIdTextbox: Locator;
+  private registerButton: Locator;
+
+  constructor(page: Page) {
+    super(page);
+    this.emailTextbox = this.page.locator("#email");
+    this.confirmPasswordTextbox = this.page.locator("#confirmPassword");
+    this.pIdTextbox = this.page.locator("pid");
+    this.registerButton = this.page.getByTitle("Register");
+  }
+
+  async register(user: User) {
+    await this.footer.scrollIntoViewIfNeeded();
+    await this.emailTextbox.fill(user.email ?? "");
+    await this.page.keyboard.press("Tab");
+    await this.passwordTextbox.fill(user.password);
+    await this.page.keyboard.press("Tab");
+    await this.confirmPasswordTextbox.fill(user.confirmPassword ?? "");
+    await this.page.keyboard.press("Tab");
+    await this.pIdTextbox.fill(user.PID ?? "");
+    await this.registerButton.click();
+  }
+}

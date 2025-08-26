@@ -1,21 +1,20 @@
-import { Page, Locator } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
 import { BasePage } from "./BasePage";
+import { User } from "../interfaces/User";
 
 export class LoginPage extends BasePage {
+  private usernameTextbox: Locator;
+  private loginButton: Locator;
+
   constructor(page: Page) {
     super(page);
+    this.usernameTextbox = page.locator("#username");
+    this.loginButton = page.getByTitle("Login");
   }
 
-  private emailTextbox = this.page.locator("#username");
-  private passwordTextbox = this.page.locator("#password");
-  private loginButton = this.page.getByTitle("Login");
-  private generalErrorMsg = this.page.getByRole("paragraph", {
-    name: "message error LoginForm",
-  });
-
-  async login(email: string, password: string) {
-    await this.emailTextbox.fill(email);
-    await this.passwordTextbox.fill(password);
+  async login(user: User) {
+    await this.usernameTextbox.fill(user.email ?? "");
+    await this.passwordTextbox.fill(user.password);
     await this.loginButton.click();
   }
 }

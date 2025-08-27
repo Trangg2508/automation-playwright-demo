@@ -21,7 +21,7 @@ export class TemporaryMailPage extends BasePage {
     this.updateDoneTime = this.page.locator("#tick", { hasText: "Done." });
     this.expectedEmail = (title: string) =>
       this.page.locator(
-        `//tbody[@id='email_list']//td[contains(text(),"${title}")]`
+        `//tbody[@id="email_list"]//td[contains(text(),"${title}")]`
       );
     this.confirmLink = (partialHref: string) =>
       this.page.locator(`//a[contains(@href,"${partialHref}")]`);
@@ -29,25 +29,13 @@ export class TemporaryMailPage extends BasePage {
   }
 
   async waitForEmailWithRetry(title: string) {
-    const maxRetries = 3;
+    const maxRetries = 5;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        await this.expectedEmail(title).waitFor({
-          timeout: data.defaultTimeout,
-        });
+      await this.page.waitForTimeout(data.defaultTimeout);
+      console.log("xpath", this.expectedEmail(title));
+      if (await this.expectedEmail(title).isVisible()) {
         return;
-      } catch (e) {
-        if (attempt < maxRetries) {
-          await this.page.reload({ waitUntil: "load" });
-          if (await this.scrambleChecbox.isChecked()) {
-            await this.scrambleChecbox.click();
-          }
-        } else {
-          throw new Error(
-            `Email with title "${title}" not found after ${maxRetries} retries`
-          );
-        }
       }
     }
   }
@@ -64,6 +52,9 @@ export class TemporaryMailPage extends BasePage {
   }
 
   async selectEmailAndConfirm(title: string, partialHref: string) {
+    console.log(title);
+    const locator = this.expectedEmail(title);
+    console.log("xpath", locator);
     await this.waitForEmailWithRetry(title);
     await this.expectedEmail(title).click();
     await this.confirmLink(partialHref).click();

@@ -4,7 +4,7 @@ import { LoginPage } from "../pages/LoginPage";
 import { User } from "../interfaces/User";
 
 test.describe("Login Suit", () => {
-  test("User can log into Railway with valid username and password", async ({
+  test("TC001-User can log into Railway with valid username and password", async ({
     page,
   }) => {
     const user: User = {
@@ -31,7 +31,7 @@ test.describe("Login Suit", () => {
     );
   });
 
-  test("User cannot login with blank Username", async ({ page }) => {
+  test("TC002-User cannot login with blank Username", async ({ page }) => {
     const user: User = {
       email: "",
       password: "12345678",

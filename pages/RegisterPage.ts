@@ -7,13 +7,15 @@ export class RegisterPage extends BasePage {
   private confirmPasswordTextbox: Locator;
   private pIdTextbox: Locator;
   private registerButton: Locator;
+  private validateErrField: (msg: string) => Locator;
 
   constructor(page: Page) {
     super(page);
     this.emailTextbox = this.page.locator("#email");
     this.confirmPasswordTextbox = this.page.locator("#confirmPassword");
-    this.pIdTextbox = this.page.locator("pid");
+    this.pIdTextbox = this.page.locator("#pid");
     this.registerButton = this.page.getByTitle("Register");
+    this.validateErrField = (msg: string) => this.page.getByLabel(`"${msg}"`);
   }
 
   async register(user: User) {
@@ -26,5 +28,9 @@ export class RegisterPage extends BasePage {
     await this.page.keyboard.press("Tab");
     await this.pIdTextbox.fill(user.PID ?? "");
     await this.registerButton.click();
+  }
+
+  async verifyValidateErrorField(msg: string) {
+    await expect(this.validateErrField(msg)).toBeVisible();
   }
 }

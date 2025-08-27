@@ -8,8 +8,8 @@ export class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.usernameTextbox = page.locator("#username");
-    this.loginButton = page.getByTitle("Login");
+    this.usernameTextbox = this.page.locator("#username");
+    this.loginButton = this.page.getByTitle("Login");
   }
 
   async login(user: User) {

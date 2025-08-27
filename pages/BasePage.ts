@@ -15,7 +15,7 @@ export class BasePage {
     this.navLogin = page.getByRole("link", { name: "Login" });
     this.navTimetable = page.getByRole("link", { name: "Timetable" });
     this.navBookTicket = page.getByRole("link", { name: "Book ticket" });
-    this.navRegister = page.locator("//[a[@href='/Account/Register.cshtml']");
+    this.navRegister = page.getByRole("link", { name: "Register" });
     this.passwordTextbox = this.page.locator("#password");
     this.generalErrorMsg = this.page.locator(
       "//div[@id='content']//p[contains(@class,'message error')]"
@@ -32,7 +32,6 @@ export class BasePage {
         await this.navBookTicket.click();
         break;
       case "register":
-        console.log("xpath", this.navRegister);
         await this.navRegister.click();
         break;
       case "login":
@@ -44,12 +43,7 @@ export class BasePage {
   }
 
   async verifyErrorMessage(message: string) {
+    await expect(this.generalErrorMsg).toBeVisible();
     await expect(this.generalErrorMsg).toContainText(message);
-  }
-
-  async openInNewTab(url: string) {
-    const context = this.page.context();
-    const newTab = await context.newPage();
-    await newTab.goto(url);
   }
 }

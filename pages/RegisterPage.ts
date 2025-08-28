@@ -15,7 +15,10 @@ export class RegisterPage extends BasePage {
     this.confirmPasswordTextbox = this.page.locator("#confirmPassword");
     this.pIdTextbox = this.page.locator("#pid");
     this.registerButton = this.page.getByTitle("Register");
-    this.validateErrField = (msg: string) => this.page.getByLabel(`"${msg}"`);
+    this.validateErrField = (msg: string) =>
+      this.page.locator(
+        `//label[@class="validation-error" and contains(text(),"${msg}")]`
+      );
   }
 
   async register(user: User) {
@@ -31,6 +34,8 @@ export class RegisterPage extends BasePage {
   }
 
   async verifyValidateErrorField(msg: string) {
+    await this.footer.scrollIntoViewIfNeeded();
+    console.log(this.validateErrField(msg));
     await expect(this.validateErrField(msg)).toBeVisible();
   }
 }
